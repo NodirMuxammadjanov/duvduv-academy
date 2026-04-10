@@ -1,0 +1,100 @@
+.section {
+  padding: 100px 0;
+  background: var(--night-2);
+  color: white;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.header {
+  margin-bottom: 72px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 850;
+  color: var(--fire);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 850;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  margin: 20px 0 24px;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--fire);
+}
+
+.desc {
+  font-size: 16px;
+  color: var(--smoke);
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.card {
+  background: var(--night-2);
+  padding: 48px;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.num {
+  font-size: 120px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.03);
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  line-height: 1;
+}
+
+.card h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 32px;
+  color: var(--fire);
+  position: relative;
+}
+
+.card ul {
+  list-style: none;
+  position: relative;
+}
+
+.card li {
+  font-size: 15px;
+  color: var(--smoke);
+  padding: 12px 0;
+  display: flex;
+  gap: 12px;
+}
+
+.card li span {
+  color: var(--fire);
+  font-weight: 800;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

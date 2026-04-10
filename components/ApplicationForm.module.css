@@ -1,0 +1,173 @@
+.section {
+  padding: 100px 0;
+  background: var(--night);
+  color: white;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--fire);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 850;
+  line-height: 0.95;
+  letter-spacing: -2px;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--fire);
+}
+
+.formCard {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--night-2);
+  padding: 64px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.stepDot {
+  width: 60px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: all 0.4s ease;
+}
+
+.stepDot.active {
+  background: var(--fire);
+  box-shadow: 0 0 15px rgba(240, 78, 35, 0.4);
+}
+
+.form h3 {
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 850;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.field {
+  margin-bottom: 28px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--smoke);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--fire);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 20px rgba(240, 78, 35, 0.1);
+}
+
+.field textarea {
+  min-height: 140px;
+}
+
+.btn {
+  width: 100%;
+  padding: 22px;
+  background: var(--fire);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-weight: 850;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 15px 30px rgba(240, 78, 35, 0.2);
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(240, 78, 35, 0.3);
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+.backBtn {
+  padding: 22px 36px;
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.success {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.success h2 {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 850;
+  margin-bottom: 16px;
+}
+
+.success p {
+  color: var(--smoke);
+  font-size: 18px;
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 80px 0;
+  }
+  .formCard {
+    padding: 48px 24px;
+    border-radius: 32px;
+  }
+}
