@@ -162,6 +162,24 @@
     justify-content: center;
     gap: 32px;
   }
+
+  .primaryBtn, .secondaryBtn {
+    padding: 14px 24px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 8vw, 42px);
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .sub {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
 }
 
 @media (max-width: 480px) {

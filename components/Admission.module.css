@@ -99,14 +99,20 @@
 
 @media (max-width: 960px) {
   .section {
-    padding: 80px 0;
+    padding: 60px 0;
   }
   .grid {
     grid-template-columns: 1fr;
-    gap: 60px;
+    gap: 40px;
   }
   .line {
     display: none;
+  }
+  .header {
+    margin-bottom: 40px;
+  }
+  .title {
+    line-height: 1.05;
   }
   .step::after {
     content: '';
