@@ -162,6 +162,14 @@
   font-size: 18px;
 }
 
+.error {
+  color: #ff4d4d;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 16px;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .section {
     padding: 60px 0;

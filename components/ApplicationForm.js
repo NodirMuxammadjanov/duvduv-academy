@@ -16,6 +16,8 @@ export default function ApplicationForm() {
     payment: 'To\'liq to\'lash — $750',
     source: 'Ijtimoiy tarmoqlar'
   });
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState('');
 
   const handlePhoneChange = (e) => {
     let value = e.target.value;
@@ -52,10 +54,30 @@ export default function ApplicationForm() {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Final Form Data:', formData);
-    setIsSubmitted(true);
+    setIsPending(true);
+    setError('');
+
+    try {
+      const resp = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await resp.json();
+
+      if (result.success) {
+        setIsSubmitted(true);
+      } else {
+        setError(result.error || 'Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+      }
+    } catch (err) {
+      setError('Server bilan bog\'lanishda xatolik yuz berdi.');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -194,9 +216,12 @@ export default function ApplicationForm() {
                         </select>
                       </div>
                       <div className={styles.actions}>
-                        <button type="button" onClick={prevStep} className={styles.backBtn}>Orqaga</button>
-                        <button type="submit" className={styles.btn}>KURSGA YOZILISH</button>
+                        <button type="button" onClick={prevStep} className={styles.backBtn} disabled={isPending}>Orqaga</button>
+                        <button type="submit" className={styles.btn} disabled={isPending}>
+                          {isPending ? 'Jo\'natilmoqda...' : 'KURSGA YOZILISH'}
+                        </button>
                       </div>
+                      {error && <p className={styles.error}>{error}</p>}
                     </motion.div>
                   )}
                 </form>
