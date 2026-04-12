@@ -33,7 +33,7 @@ export async function POST(req) {
             new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' }),
             name,
             age,
-            phone,
+            `'${phone}`,
             telegram,
             occupation,
             experience,

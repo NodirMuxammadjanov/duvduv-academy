@@ -117,7 +117,7 @@ describe('POST /api/lead', () => {
     // row: [timestamp, name, age, phone, telegram, occupation, experience, payment, source]
     expect(row[1]).toBe(formData.name);
     expect(row[2]).toBe(formData.age);
-    expect(row[3]).toBe(formData.phone);
+    expect(row[3]).toBe(`'${formData.phone}`);
     expect(row[4]).toBe(formData.telegram);
     expect(row[5]).toBe(formData.occupation);
     expect(row[6]).toBe(formData.experience);
