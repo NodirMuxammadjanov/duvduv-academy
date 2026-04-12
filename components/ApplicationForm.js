@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './ApplicationForm.module.css';
 
+import { formatPhoneNumber } from '@/lib/phoneUtils';
+
 export default function ApplicationForm() {
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -20,35 +22,7 @@ export default function ApplicationForm() {
   const [error, setError] = useState('');
 
   const handlePhoneChange = (e) => {
-    let value = e.target.value;
-    
-    // Ensure +998 stays
-    if (!value.startsWith('+998 ')) {
-      value = '+998 ';
-    }
-
-    // Strip non-digits after +998
-    let digits = value.slice(5).replace(/\D/g, '');
-    
-    // Limit to 9 digits (XX-XXX-XX-XX)
-    digits = digits.slice(0, 9);
-
-    // Format: 90-123-45-67
-    let formatted = '';
-    if (digits.length > 0) {
-      formatted += digits.slice(0, 2);
-      if (digits.length > 2) {
-        formatted += '-' + digits.slice(2, 5);
-      }
-      if (digits.length > 5) {
-        formatted += '-' + digits.slice(5, 7);
-      }
-      if (digits.length > 7) {
-        formatted += '-' + digits.slice(7, 9);
-      }
-    }
-
-    setFormData({ ...formData, phone: '+998 ' + formatted });
+    setFormData({ ...formData, phone: formatPhoneNumber(e.target.value) });
   };
 
   const nextStep = () => setStep(step + 1);
