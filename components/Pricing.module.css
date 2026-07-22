@@ -35,11 +35,19 @@
   color: var(--fire);
 }
 
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 32px;
+}
+
 .card {
-  max-width: 900px;
-  margin: 0 auto;
+  flex: 1 1 440px;
+  max-width: 520px;
   background: white;
-  padding: 80px 60px;
+  padding: 64px 44px;
   border-radius: 48px;
   box-shadow: 0 40px 120px rgba(0, 0, 0, 0.08);
   text-align: center;
@@ -48,28 +56,27 @@
   overflow: hidden;
 }
 
-.badge {
+.cardType {
   display: inline-block;
-  background: rgba(240, 78, 35, 0.08);
-  color: var(--fire);
-  padding: 10px 24px;
-  border-radius: 100px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 850;
-  margin-bottom: 32px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--fire);
+  margin-bottom: 20px;
 }
 
 .price {
-  font-size: clamp(80px, 12vw, 130px);
+  font-size: clamp(48px, 7vw, 78px);
   font-weight: 850;
   line-height: 1;
   color: var(--ink);
   margin-bottom: 12px;
-  letter-spacing: -4px;
+  letter-spacing: -3px;
 }
 
 .currency {
-  font-size: clamp(32px, 4vw, 44px);
+  font-size: clamp(24px, 3vw, 34px);
   vertical-align: super;
   margin-right: 4px;
   color: var(--ash);
@@ -90,7 +97,7 @@
   border-radius: 18px;
   font-size: clamp(13px, 1.5vw, 15px);
   font-weight: 600;
-  margin-bottom: 72px;
+  margin-bottom: 48px;
 }
 
 .split span {
@@ -100,10 +107,10 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 18px;
   text-align: left;
-  margin-bottom: 72px;
+  margin-bottom: 48px;
 }
 
 .feature {
@@ -141,33 +148,25 @@
   box-shadow: 0 24px 60px rgba(240, 78, 35, 0.4);
 }
 
-@media (max-width: 768px) {
-  .section {
-    padding: 80px 0;
-  }
-  .card {
-    padding: 60px 24px;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .footerNote {
-  margin-top: 32px;
+  text-align: center;
+  margin-top: 40px;
   font-size: 12px;
   color: var(--ash);
   font-style: italic;
 }
 
 @media (max-width: 768px) {
-  .card {
-    padding: 40px 24px;
+  .section {
+    padding: 80px 0;
   }
-  .grid {
-    grid-template-columns: 1fr;
+  .container {
+    padding: 0 20px;
+  }
+  .card {
+    padding: 48px 28px;
   }
   .price {
-    font-size: 80px;
+    font-size: 64px;
   }
 }
