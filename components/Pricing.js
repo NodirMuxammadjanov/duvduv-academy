@@ -8,7 +8,18 @@ import {
 } from '@/lib/coursePricing';
 
 export default function Pricing() {
-  const features = [
+  const offlineFeatures = [
+    '3 oy, haftada 2 marta darslar',
+    'Darslar yozib olinadi',
+    'Real mijoz bilan amaliyot',
+    'Portfolio - real loyiha ishi',
+    'Faqat oflayn - jonli ta\'lim',
+    'Agency 605 jamoasi dars o\'tadi',
+    'Sertifikat (himoyadan so\'ng)',
+    'Agency 605 da amaliyot imkoni'
+  ];
+
+  const onlineFeatures = [
     '3 oy, haftada 1 marta jonli darslar',
     'Platformada darslik',
     'Real mijozlar bilan amaliyot',
@@ -20,8 +31,8 @@ export default function Pricing() {
   ];
 
   const plans = [
-    { type: 'Oflayn', amount: COURSE_PRICE_AMOUNT, split: COURSE_SPLIT_PRICE, features },
-    { type: 'Online', amount: ONLINE_PRICE_AMOUNT, split: ONLINE_SPLIT_PRICE, features },
+    { type: 'Oflayn', amount: COURSE_PRICE_AMOUNT, split: COURSE_SPLIT_PRICE, features: offlineFeatures },
+    { type: 'Online', amount: ONLINE_PRICE_AMOUNT, split: ONLINE_SPLIT_PRICE, features: onlineFeatures },
   ];
 
   return (
