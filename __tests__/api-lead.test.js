@@ -3,7 +3,6 @@
  * Tests the Google Sheets API integration with mocked googleapis
  */
 
-// Polyfill Response for Jest jsdom environment
 if (typeof global.Response === 'undefined') {
   global.Response = class Response {
     constructor(body, init) {
@@ -17,7 +16,6 @@ if (typeof global.Response === 'undefined') {
   };
 }
 
-// Mock googleapis BEFORE importing the route
 jest.mock('googleapis', () => ({
   google: {
     auth: {
@@ -35,14 +33,12 @@ jest.mock('googleapis', () => ({
   },
 }));
 
-// Mock Next.js env
 process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = 'test@test.iam.gserviceaccount.com';
 process.env.GOOGLE_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----\n';
 process.env.GOOGLE_SHEET_ID = 'test-sheet-id-123';
 
 const { POST } = require('@/app/api/lead/route');
 
-// Helper: create a mock Request object
 function makeRequest(body) {
   return {
     json: async () => body,
@@ -54,9 +50,18 @@ describe('POST /api/lead', () => {
     jest.clearAllMocks();
   });
 
-  test('returns 400 when name is missing', async () => {
-    const req = makeRequest({ phone: '+998 90-123-45-67' });
-    const resp = await POST(req);
+  test.each([
+    ['name', { age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['age', { name: 'Test User', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['phone', { name: 'Test User', age: '24', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['telegram', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['field', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['experience', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', income: '3-5 million', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['income', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', languages: 'O\'zbek', payment: 'Bittada 750$ to\'layman' }],
+    ['languages', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', payment: 'Bittada 750$ to\'layman' }],
+    ['payment', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
+  ])('returns 400 when %s is missing', async (_field, payload) => {
+    const resp = await POST(makeRequest(payload));
     const body = await resp.json();
 
     expect(resp.status).toBe(400);
@@ -64,25 +69,17 @@ describe('POST /api/lead', () => {
     expect(body.error).toMatch(/required/i);
   });
 
-  test('returns 400 when phone is missing', async () => {
-    const req = makeRequest({ name: 'Nodirbek' });
-    const resp = await POST(req);
-    const body = await resp.json();
-
-    expect(resp.status).toBe(400);
-    expect(body.success).toBe(false);
-  });
-
   test('returns 200 and success:true with valid data', async () => {
     const req = makeRequest({
       name: 'Nodirbek Ergashev',
       age: '24',
       phone: '+998 90-123-45-67',
-      telegram: '@nodirbek',
-      occupation: 'Dizayner',
-      experience: '2 yil',
-      payment: "To'liq to'lash — $750",
-      source: 'Ijtimoiy tarmoqlar',
+      telegram: 'nodirbek',
+      field: 'Marketing',
+      experience: '1-2 yil',
+      income: '3-5 million',
+      languages: "O'zbek, Rus, Ingliz",
+      payment: "3 ga bo'lib, har oy 250$ dan",
     });
 
     const resp = await POST(req);
@@ -101,10 +98,11 @@ describe('POST /api/lead', () => {
       age: '22',
       phone: '+998 90-000-00-00',
       telegram: '@testuser',
-      occupation: 'Talaba',
-      experience: 'Yo\'q',
-      payment: "Bo'lib to'lash — 3 × $250",
-      source: 'Do\'stlarimdan',
+      field: 'Design',
+      experience: '3 yildan ko\'p',
+      income: '10 million+',
+      languages: 'O\'zbek, Rus',
+      payment: 'Bittada 750$ to\'layman',
     };
 
     await POST(makeRequest(formData));
@@ -114,15 +112,40 @@ describe('POST /api/lead', () => {
     const callArgs = mockAppend.mock.calls[0][0];
     const row = callArgs.requestBody.values[0];
 
-    // row: [timestamp, name, age, phone, telegram, occupation, experience, payment, source]
+    expect(callArgs.range).toBe('Sheet1!A:J');
+    expect(callArgs.valueInputOption).toBe('RAW');
+    expect(row).toHaveLength(10);
     expect(row[1]).toBe(formData.name);
     expect(row[2]).toBe(formData.age);
-    expect(row[3]).toBe(`'${formData.phone}`);
+    expect(row[3]).toBe(formData.phone);
     expect(row[4]).toBe(formData.telegram);
-    expect(row[5]).toBe(formData.occupation);
+    expect(row[5]).toBe(formData.field);
     expect(row[6]).toBe(formData.experience);
-    expect(row[7]).toBe(formData.payment);
-    expect(row[8]).toBe(formData.source);
+    expect(row[7]).toBe(formData.income);
+    expect(row[8]).toBe(formData.languages);
+    expect(row[9]).toBe(formData.payment);
+  });
+
+  test('normalizes telegram usernames without @', async () => {
+    const { google } = require('googleapis');
+    const mockAppend = google.sheets().spreadsheets.values.append;
+
+    await POST(
+      makeRequest({
+        name: 'Test',
+        age: '24',
+        phone: '+998 90-000-00-00',
+        telegram: 'testuser',
+        field: 'Marketing',
+        experience: '1-2 yil',
+        income: '3-5 million',
+        languages: 'O\'zbek',
+        payment: 'Bittada 750$ to\'layman',
+      })
+    );
+
+    const row = mockAppend.mock.calls[0][0].requestBody.values[0];
+    expect(row[4]).toBe('@testuser');
   });
 
   test('returns 500 when Google Sheets throws an error', async () => {
@@ -133,7 +156,14 @@ describe('POST /api/lead', () => {
 
     const req = makeRequest({
       name: 'Test',
+      age: '24',
       phone: '+998 90-000-00-00',
+      telegram: '@testuser',
+      field: 'Marketing',
+      experience: '1-2 yil',
+      income: '3-5 million',
+      languages: 'O\'zbek',
+      payment: 'Bittada 750$ to\'layman',
     });
 
     const resp = await POST(req);

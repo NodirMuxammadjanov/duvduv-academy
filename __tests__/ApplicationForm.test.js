@@ -1,9 +1,8 @@
 /**
  * Tests: ApplicationForm Component
- * Tests multi-step form flow, validation, submit, and error states
+ * Tests single-step form fields, submit, validation, and error states
  */
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import ApplicationForm from '@/components/ApplicationForm';
 
 // Mock framer-motion animations (not relevant to logic tests)
@@ -13,133 +12,88 @@ jest.mock('framer-motion', () => ({
       const { initial, animate, exit, transition, ...rest } = props;
       return <div {...rest}>{children}</div>;
     },
+    form: ({ children, ...props }) => {
+      const { initial, animate, exit, transition, ...rest } = props;
+      return <form {...rest}>{children}</form>;
+    },
   },
-  AnimatePresence: ({ children }) => <>{children}</>,
 }));
 
-// Mock fetch globally
 global.fetch = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe('ApplicationForm — Step 1: Shaxsiy ma\'lumotlar', () => {
-  test('renders step 1 fields on initial load', () => {
+function fillRequiredFields() {
+  fireEvent.change(screen.getByPlaceholderText(/Masalan: Nodirbek Ergashev/), {
+    target: { value: 'Test User' },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Masalan: 24/), {
+    target: { value: '24' },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/\+998 90-123-45-67/), {
+    target: { value: '+998 901234567' },
+  });
+  fireEvent.change(screen.getByPlaceholderText('@username'), {
+    target: { value: '@testuser' },
+  });
+}
+
+describe('ApplicationForm - single-step form', () => {
+  test('renders only the required fields', () => {
     render(<ApplicationForm />);
-    expect(screen.getByPlaceholderText(/Masalan: Nodirbek Ergashev/)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Masalan: 24/)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/\+998 90-123-45-67/)).toBeInTheDocument();
+
+    expect(screen.getByLabelText(/To'liq ism/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Yosh/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Telefon/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Telegram username/i)).toBeInTheDocument();
   });
 
-  test('phone input pre-filled with +998 prefix', () => {
+  test('does not render multi-step controls or removed fields', () => {
+    render(<ApplicationForm />);
+
+    expect(screen.queryByText(/Davom etish/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Orqaga/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Kasbingiz/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Tajribangiz/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/To'lov varianti/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/qayerdan eshitdingiz/)).not.toBeInTheDocument();
+    expect(document.querySelectorAll('[class*="stepDot"]').length).toBe(0);
+  });
+
+  test('phone input is pre-filled with +998 prefix', () => {
     render(<ApplicationForm />);
     const phoneInput = screen.getByPlaceholderText(/\+998 90-123-45-67/);
     expect(phoneInput).toHaveValue('+998 ');
   });
 
-  test('"Davom etish" button is visible on step 1', () => {
+  test('submit button text is "Kursga yozilish"', () => {
     render(<ApplicationForm />);
-    expect(screen.getByText(/Davom etish/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Kursga yozilish' })).toBeInTheDocument();
   });
 
-  test('shows 3 step indicators', () => {
-    render(<ApplicationForm />);
-    // 3 stepDot elements
-    const dots = document.querySelectorAll('[class*="stepDot"]');
-    expect(dots.length).toBe(3);
-  });
-
-  test('clicking "Davom etish" advances to step 2', async () => {
-    render(<ApplicationForm />);
-    const nextBtn = screen.getByText(/Davom etish/);
-    fireEvent.click(nextBtn);
-    
-    await waitFor(() => {
-      expect(screen.getByText(/Siz haqingizda/)).toBeInTheDocument();
-    });
-  });
-});
-
-describe('ApplicationForm — Step 2: Siz haqingizda', () => {
-  async function goToStep2() {
-    render(<ApplicationForm />);
-    fireEvent.click(screen.getByText(/Davom etish/));
-    await waitFor(() => screen.getByText(/Siz haqingizda/));
-  }
-
-  test('shows occupation and experience fields', async () => {
-    await goToStep2();
-    expect(screen.getByPlaceholderText(/Masalan: Grafik dizayner/)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Qancha vaqtdan beri/)).toBeInTheDocument();
-  });
-
-  test('shows back button on step 2', async () => {
-    await goToStep2();
-    expect(screen.getByText('Orqaga')).toBeInTheDocument();
-  });
-
-  test('"Orqaga" button goes back to step 1', async () => {
-    await goToStep2();
-    fireEvent.click(screen.getByText('Orqaga'));
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Masalan: Nodirbek Ergashev/)).toBeInTheDocument();
-    });
-  });
-
-  test('clicking "Davom etish" from step 2 goes to step 3', async () => {
-    await goToStep2();
-    // Click the "Davom etish →" button (not the back btn)
-    const nextBtns = screen.getAllByText(/Davom etish/);
-    fireEvent.click(nextBtns[nextBtns.length - 1]);
-    await waitFor(() => {
-      expect(screen.getByText(/Qo'shimcha ma'lumotlar/)).toBeInTheDocument();
-    });
-  });
-});
-
-describe('ApplicationForm — Step 3: Qo\'shimcha ma\'lumotlar', () => {
-  async function goToStep3() {
-    render(<ApplicationForm />);
-    // Step 1 → 2
-    fireEvent.click(screen.getByText(/Davom etish/));
-    await waitFor(() => screen.getByText(/Siz haqingizda/));
-    // Step 2 → 3
-    const nextBtns = screen.getAllByText(/Davom etish/);
-    fireEvent.click(nextBtns[nextBtns.length - 1]);
-    await waitFor(() => screen.getByText(/Qo'shimcha ma'lumotlar/));
-  }
-
-  test('renders telegram, payment, and source fields', async () => {
-    await goToStep3();
-    expect(screen.getByPlaceholderText('@username')).toBeInTheDocument();
-    expect(screen.getByDisplayValue(/To'liq to'lash/)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(/Ijtimoiy tarmoqlar/)).toBeInTheDocument();
-  });
-
-  test('"KURSGA YOZILISH" submit button is visible', async () => {
-    await goToStep3();
-    expect(screen.getByRole('button', { name: 'KURSGA YOZILISH' })).toBeInTheDocument();
-  });
-
-  test('submit sends POST to /api/lead with form data', async () => {
+  test('submit sends POST to /api/lead with only required form data', async () => {
     global.fetch.mockResolvedValueOnce({
       json: async () => ({ success: true }),
     });
 
-    await goToStep3();
-
-    // Fill telegram
-    fireEvent.change(screen.getByPlaceholderText('@username'), {
-      target: { value: '@testuser' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'KURSGA YOZILISH' }));
+    render(<ApplicationForm />);
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole('button', { name: 'Kursga yozilish' }));
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/lead',
-        expect.objectContaining({ method: 'POST' })
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'Test User',
+            age: '24',
+            phone: '+998 90-123-45-67',
+            telegram: '@testuser',
+          }),
+        })
       );
     });
   });
@@ -149,9 +103,9 @@ describe('ApplicationForm — Step 3: Qo\'shimcha ma\'lumotlar', () => {
       json: async () => ({ success: true }),
     });
 
-    await goToStep3();
-    fireEvent.change(screen.getByPlaceholderText('@username'), { target: { value: '@testuser' } });
-    fireEvent.click(screen.getByRole('button', { name: 'KURSGA YOZILISH' }));
+    render(<ApplicationForm />);
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole('button', { name: 'Kursga yozilish' }));
 
     await waitFor(() => {
       expect(screen.getByText('Muvaffaqiyatli!')).toBeInTheDocument();
@@ -163,21 +117,21 @@ describe('ApplicationForm — Step 3: Qo\'shimcha ma\'lumotlar', () => {
       json: async () => ({ success: false, error: 'Server xatosi' }),
     });
 
-    await goToStep3();
-    fireEvent.change(screen.getByPlaceholderText('@username'), { target: { value: '@testuser' } });
-    fireEvent.click(screen.getByRole('button', { name: 'KURSGA YOZILISH' }));
+    render(<ApplicationForm />);
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole('button', { name: 'Kursga yozilish' }));
 
     await waitFor(() => {
       expect(screen.getByText('Server xatosi')).toBeInTheDocument();
     });
   });
 
-  test('shows generic error message when fetch throws (network failure)', async () => {
+  test('shows generic error message when fetch throws', async () => {
     global.fetch.mockRejectedValueOnce(new Error('Network Error'));
 
-    await goToStep3();
-    fireEvent.change(screen.getByPlaceholderText('@username'), { target: { value: '@testuser' } });
-    fireEvent.click(screen.getByRole('button', { name: 'KURSGA YOZILISH' }));
+    render(<ApplicationForm />);
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole('button', { name: 'Kursga yozilish' }));
 
     await waitFor(() => {
       expect(screen.getByText(/Server bilan bog'lanishda xatolik/)).toBeInTheDocument();
@@ -187,30 +141,30 @@ describe('ApplicationForm — Step 3: Qo\'shimcha ma\'lumotlar', () => {
   test('submit button is disabled while pending', async () => {
     let resolveFetch;
     global.fetch.mockReturnValueOnce(
-      new Promise((resolve) => { resolveFetch = resolve; })
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      })
     );
 
-    await goToStep3();
-    fireEvent.change(screen.getByPlaceholderText('@username'), { target: { value: '@testuser' } });
-    fireEvent.click(screen.getByRole('button', { name: 'KURSGA YOZILISH' }));
+    render(<ApplicationForm />);
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole('button', { name: 'Kursga yozilish' }));
 
-    // Button should be disabled while loading
     await waitFor(() => {
       expect(screen.getByText("Jo'natilmoqda...")).toBeDisabled();
     });
 
-    // Resolve the fetch
     act(() => {
       resolveFetch({ json: async () => ({ success: true }) });
     });
   });
 });
 
-describe('ApplicationForm — Phone formatting', () => {
+describe('ApplicationForm - Phone formatting', () => {
   test('phone input formats digits as user types', () => {
     render(<ApplicationForm />);
     const phoneInput = screen.getByPlaceholderText(/\+998 90-123-45-67/);
-    
+
     fireEvent.change(phoneInput, { target: { value: '+998 901234567' } });
     expect(phoneInput).toHaveValue('+998 90-123-45-67');
   });
@@ -218,10 +172,9 @@ describe('ApplicationForm — Phone formatting', () => {
   test('phone does not exceed 9 digits', () => {
     render(<ApplicationForm />);
     const phoneInput = screen.getByPlaceholderText(/\+998 90-123-45-67/);
-    
+
     fireEvent.change(phoneInput, { target: { value: '+998 9012345678999' } });
-    // Should still be max 9 digits
     const digits = phoneInput.value.replace(/\D/g, '');
-    expect(digits.length).toBeLessThanOrEqual(12); // 998 + 9 = 12
+    expect(digits.length).toBeLessThanOrEqual(12);
   });
 });

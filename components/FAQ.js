@@ -8,7 +8,7 @@ export default function FAQ() {
   const questions = [
     { q: 'Kursga qabul qilinish uchun tajriba kerakmi?', a: 'Yo\'q, tajriba shart emas. Lekin sizda kuchli ishtiyoq va kreativlikka qiziqish bo\'lishi kerak.' },
     { q: 'Kurs qaysi tilda o\'tadi?', a: 'Darslar o\'zbek tilida olib boriladi.' },
-    { q: 'Bo\'lib to\'lash mumkinmi?', a: 'Ha, kurs narxini 3 marta bo\'lib ($250 dan) to\'lash imkoniyati mavjud.' },
+    { q: 'Bo\'lib to\'lash mumkinmi?', a: 'Ha, kurs narxini 3 marta bo\'lib (har oy 3 million so\'mdan) to\'lash imkoniyati mavjud.' },
     { q: 'Darsga kela olmasam nima bo\'ladi?', a: 'Barcha darslar yozib olinadi va sizga taqdim etiladi.' },
     { q: 'Bepul leksiyalardan nimasi farq qiladi?', a: 'Bizda faqat nazariya emas, balki real loyihalar ustida Agency 605 mentorlari bilan yakkama-yakka ishlaysiz.' },
     { q: 'Agency 605 da ishlash kafolatlanadimi?', a: 'Eng yaxshi bitiruvchilar (imtihondan muvaffaqiyatli o\'tganlar) ish bilan ta\'minlanadi.' }

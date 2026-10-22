@@ -1,11 +1,10 @@
-import Navbar from '@/components/Navbar';
+﻿import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import Exclusivity from '@/components/Exclusivity';
-import Admission from '@/components/Admission';
 import Modules from '@/components/Modules';
 import Mentors from '@/components/Mentors';
 import Pricing from '@/components/Pricing';
-import AgencyProof from '@/components/AgencyProof';
+import Portfolio from '@/components/Portfolio';
+import StudentsShowcase from '@/components/StudentsShowcase';
 import FAQ from '@/components/FAQ';
 import ApplicationForm from '@/components/ApplicationForm';
 
@@ -14,18 +13,17 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
-      <Exclusivity />
-      <Admission />
       <Modules />
       <Mentors />
       <Pricing />
-      <AgencyProof />
+      <Portfolio />
+      <StudentsShowcase />
       <FAQ />
       <ApplicationForm />
-      
-      <footer style={{ 
-        padding: '32px 48px', 
-        background: 'var(--night)', 
+
+      <footer style={{
+        padding: '32px 48px',
+        background: 'var(--night)',
         color: 'rgba(255,255,255,0.3)',
         fontSize: '12px',
         textAlign: 'center',

@@ -7,14 +7,15 @@ services:
       dockerfile: Dockerfile
     container_name: duvduv-gap
     ports:
-      - "3000:3000"
+      - "3005:3000"
     env_file:
       - .env.local
     environment:
       - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/lead"]
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3

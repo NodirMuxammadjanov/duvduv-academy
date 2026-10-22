@@ -1,16 +1,39 @@
 import { google } from 'googleapis';
 
+function normalizeText(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function normalizeTelegram(value) {
+  const trimmed = normalizeText(value).replace(/^@+/, '');
+  return trimmed ? `@${trimmed}` : '';
+}
+
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, age, phone, telegram, occupation, experience, payment, source } = body;
 
-    // Validate required fields
-    if (!name || !phone) {
-      return new Response(JSON.stringify({ success: false, error: 'Name and Phone are required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    const name = normalizeText(body.name);
+    const age = normalizeText(body.age);
+    const phone = normalizeText(body.phone);
+    const telegram = normalizeTelegram(body.telegram);
+    const field = normalizeText(body.field);
+    const experience = normalizeText(body.experience);
+    const income = normalizeText(body.income);
+    const languages = normalizeText(body.languages);
+    const payment = normalizeText(body.payment);
+
+    if (!name || !age || !phone || !telegram || !field || !experience || !income || !languages || !payment) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Name, age, phone, telegram, field, experience, income, languages, and payment are required',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const auth = new google.auth.GoogleAuth({
@@ -25,20 +48,21 @@ export async function POST(req) {
 
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:I', 
-      valueInputOption: 'USER_ENTERED',
+      range: 'Sheet1!A:J',
+      valueInputOption: 'RAW',
       requestBody: {
         values: [
           [
             new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' }),
             name,
             age,
-            `'${phone}`, // Force Google Sheets to treat as text by prepending a single quote
+            phone,
             telegram,
-            occupation,
+            field,
             experience,
+            income,
+            languages,
             payment,
-            source,
           ],
         ],
       },

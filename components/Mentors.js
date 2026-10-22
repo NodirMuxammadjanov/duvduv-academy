@@ -1,24 +1,16 @@
-"use client";
+﻿"use client";
+import Image from 'next/image';
 import styles from './Mentors.module.css';
 
 export default function Mentors() {
   const awards = [
-    { icon: '🥇', label: 'TAF! 2024 & 2025 — Yil Agentligi' },
-    { icon: '🥈', label: 'Jolbors Festival — Kumush' },
-    { icon: '🥉', label: 'Jolbors Festival — Bronza' }
-  ];
-
-  const team = [
-    { name: 'Aziz Gapparov', role: 'ASOSCHI & BIZNES KONSULTANT', bio: '605 Agency asoschisi. Biznes strategiya va agentlik boshqaruvi bo\'yicha tajriba.' },
-    { name: 'Otabek Sharapov', role: 'ASOSCHI & KREATIV DIREKTOR', bio: 'Agentlikning kreativ yo\'nalishini boshqaradi. Jolbors va TAF! mukofotlari sohibi.' },
-    { name: 'Sevara Asamova', role: 'STRATEGIYA DIREKTORI', bio: 'Brend va kommunikatsion strategiya bo\'yicha mutaxassis. Tadqiqotga asoslangan yondashuv.' },
-    { name: 'Bekzod Nazirov', role: 'KREATIV JAMOA BOSHI', bio: '"Xo\'jayin", "Texnomart To\'yi", "Onasini emsin" kabi taniqli loyihalar muallifi.' },
-    { name: 'Dilya Alimova', role: 'MARKETING DIREKTOR', bio: 'Marketing strategiya va kampaniya boshqaruvi bo\'yicha ekspert.' },
-    { name: 'Shukurullo Xudayberidiyev', role: 'DIZAYN JAMOA BOSHI', bio: 'Firma uslubi, brend dizayni va vizual identifikatsiya yo\'nalishida rahbar.' }
+    { icon: '🥇', label: 'TAF! 2024 & 2025 - Yil Agentligi' },
+    { icon: '🥈', label: 'Jolbors Festival - Kumush' },
+    { icon: '🥉', label: 'Jolbors Festival - Bronza' }
   ];
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} id="mentors">
       <div className={styles.container}>
         <div className={styles.header}>
           <span className={styles.tag}>AGENCY 605</span>
@@ -29,29 +21,32 @@ export default function Mentors() {
         </div>
 
         <div className={styles.awards}>
-          {awards.map((a, i) => (
-            <div key={i} className={styles.awardItem}>
+          {awards.map((a) => (
+            <div key={a.label} className={styles.awardItem}>
               <span>{a.icon}</span> {a.label}
             </div>
           ))}
         </div>
-        
-        <div className={styles.grid}>
-          {team.map((m, i) => (
-            <div key={i} className={styles.card}>
-              <h3>{m.name}</h3>
-              <span className={styles.role}>{m.role}</span>
-              <p>{m.bio}</p>
-            </div>
-          ))}
-        </div>
 
-        <div className={styles.footer}>
-          <p>
-            <strong>605 Agency</strong> — bu bizneslarga kreativ yechim beruvchi agentlik. Strategiya, dizayn va promo yo'nalishlarida ishlaydi. 
-            Tadqiqotga asoslanib, raqobatchilardan ajralib turuvchi, auditoriya uchun foydali va biznes uchun manfaatli yechimlar yaratadi. <span>605agency.uz →</span>
-          </p>
-        </div>
+        <article className={styles.mentorCard}>
+          <Image
+            src="/students/mentor-otabek.webp"
+            alt="Kurs mentori Otabek Sharapov"
+            className={styles.mentorImage}
+            width={1340}
+            height={2520}
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, 92vw"
+          />
+          <div className={styles.mentorBody}>
+            <span className={styles.mentorLabel}>KURS MENTORI</span>
+            <h3>Otabek Sharapov</h3>
+            <p className={styles.mentorRole}>Asoschi va Kreativ Direktor, Agency 605</p>
+            <p className={styles.mentorDesc}>
+              Kursning asosiy darslarini Otabek Sharapov olib boradi. U strategiya va kreativni real bozor kampaniyalari orqali tushuntirib, g'oyani ishlaydigan yechimga aylantirish metodikasini amaliy formatda beradi.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
   );
