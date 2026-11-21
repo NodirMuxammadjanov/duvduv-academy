@@ -4,6 +4,7 @@ import { useId, useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from './ApplicationForm.module.css';
 import { formatPhoneNumber, isPhoneComplete } from '@/lib/phoneUtils';
+import { FORMAT_OPTIONS, FORMAT_QUESTION } from '@/lib/coursePricing';
 
 const MIN_LOADING_MS = 2500;
 
@@ -43,7 +44,7 @@ function validateStep2(formData) {
     return 'Iltimos, 2-bosqichdagi barcha maydonlarni to\'ldiring.';
   }
 
-  if (!formData.experience || !formData.income || !formData.languages.trim()) {
+  if (!formData.experience || !formData.income || !formData.languages.trim() || !formData.format) {
     return 'Iltimos, 2-bosqichdagi barcha maydonlarni to\'ldiring.';
   }
 
@@ -108,6 +109,7 @@ export default function ApplicationForm() {
     experience: '',
     income: '',
     languages: '',
+    format: '',
   });
 
   const handlePhoneChange = (e) => {
@@ -164,6 +166,7 @@ export default function ApplicationForm() {
         experience: formData.experience,
         income: formData.income,
         languages: formData.languages.trim(),
+        format: formData.format,
       };
 
       const resp = await fetch('/api/lead', {
@@ -330,6 +333,19 @@ export default function ApplicationForm() {
             required
             value={formData.languages}
             onChange={(e) => setFormData((current) => ({ ...current, languages: e.target.value }))}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label>{FORMAT_QUESTION} *</label>
+          <DropdownField
+            label={FORMAT_QUESTION}
+            value={formData.format}
+            placeholder="Tanlang"
+            options={FORMAT_OPTIONS}
+            isOpen={openDropdown === 'format'}
+            onToggle={() => toggleDropdown('format')}
+            onChange={(format) => setFormData((current) => ({ ...current, format }))}
           />
         </div>
 

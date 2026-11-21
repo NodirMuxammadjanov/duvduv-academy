@@ -51,14 +51,15 @@ describe('POST /api/lead', () => {
   });
 
   test.each([
-    ['name', { age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
-    ['age', { name: 'Test User', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
-    ['phone', { name: 'Test User', age: '24', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
-    ['telegram', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
-    ['field', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
-    ['experience', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', income: '3-5 million', languages: 'O\'zbek' }],
-    ['income', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', languages: 'O\'zbek' }],
-    ['languages', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million' }],
+    ['name', { age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['age', { name: 'Test User', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['phone', { name: 'Test User', age: '24', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['telegram', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['field', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['experience', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', income: '3-5 million', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['income', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', languages: 'O\'zbek', format: 'Online (6 million so\'m)' }],
+    ['languages', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', format: 'Online (6 million so\'m)' }],
+    ['format', { name: 'Test User', age: '24', phone: '+998 90-123-45-67', telegram: '@testuser', field: 'Marketing', experience: '1-2 yil', income: '3-5 million', languages: 'O\'zbek' }],
   ])('returns 400 when %s is missing', async (_field, payload) => {
     const resp = await POST(makeRequest(payload));
     const body = await resp.json();
@@ -78,6 +79,7 @@ describe('POST /api/lead', () => {
       experience: '1-2 yil',
       income: '3-5 million',
       languages: "O'zbek, Rus, Ingliz",
+      format: 'Oflayn (12 million so\'m)',
     });
 
     const resp = await POST(req);
@@ -100,6 +102,7 @@ describe('POST /api/lead', () => {
       experience: '3 yildan ko\'p',
       income: '10 million+',
       languages: 'O\'zbek, Rus',
+      format: 'Oflayn (12 million so\'m)',
     };
 
     await POST(makeRequest(formData));
@@ -109,9 +112,9 @@ describe('POST /api/lead', () => {
     const callArgs = mockAppend.mock.calls[0][0];
     const row = callArgs.requestBody.values[0];
 
-    expect(callArgs.range).toBe('Sheet1!A:I');
+    expect(callArgs.range).toBe('Sheet1!A:J');
     expect(callArgs.valueInputOption).toBe('RAW');
-    expect(row).toHaveLength(9);
+    expect(row).toHaveLength(10);
     expect(row[1]).toBe(formData.name);
     expect(row[2]).toBe(formData.age);
     expect(row[3]).toBe(formData.phone);
@@ -120,6 +123,7 @@ describe('POST /api/lead', () => {
     expect(row[6]).toBe(formData.experience);
     expect(row[7]).toBe(formData.income);
     expect(row[8]).toBe(formData.languages);
+    expect(row[9]).toBe(formData.format);
   });
 
   test('normalizes telegram usernames without @', async () => {
@@ -136,6 +140,7 @@ describe('POST /api/lead', () => {
         experience: '1-2 yil',
         income: '3-5 million',
         languages: 'O\'zbek',
+        format: 'Oflayn (12 million so\'m)',
       })
     );
 
@@ -158,6 +163,7 @@ describe('POST /api/lead', () => {
       experience: '1-2 yil',
       income: '3-5 million',
       languages: 'O\'zbek',
+      format: 'Oflayn (12 million so\'m)',
     });
 
     const resp = await POST(req);
