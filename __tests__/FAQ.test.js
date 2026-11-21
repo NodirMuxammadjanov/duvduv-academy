@@ -18,8 +18,8 @@ describe('FAQ Component', () => {
     // All question texts should be visible
     expect(screen.getByText(/Kursga qabul qilinish uchun tajriba kerakmi/)).toBeInTheDocument();
     expect(screen.getByText(/Kurs qaysi tilda o'tadi/)).toBeInTheDocument();
-    expect(screen.getByText(/Bo'lib to'lash mumkinmi/)).toBeInTheDocument();
-    expect(screen.getByText(/Darsga kela olmasam nima bo'ladi/)).toBeInTheDocument();
+    expect(screen.getByText(/Kurs qachon boshlanadi/)).toBeInTheDocument();
+    expect(screen.getByText(/Oflayn kursda darslar yozib olinadimi/)).toBeInTheDocument();
     expect(screen.getByText(/Bepul leksiyalardan nimasi farq qiladi/)).toBeInTheDocument();
     expect(screen.getByText(/Agency 605 da ishlash kafolatlanadimi/)).toBeInTheDocument();
   });

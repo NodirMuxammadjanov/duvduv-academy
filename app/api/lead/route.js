@@ -21,13 +21,12 @@ export async function POST(req) {
     const experience = normalizeText(body.experience);
     const income = normalizeText(body.income);
     const languages = normalizeText(body.languages);
-    const payment = normalizeText(body.payment);
 
-    if (!name || !age || !phone || !telegram || !field || !experience || !income || !languages || !payment) {
+    if (!name || !age || !phone || !telegram || !field || !experience || !income || !languages) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Name, age, phone, telegram, field, experience, income, languages, and payment are required',
+          error: 'Name, age, phone, telegram, field, experience, income, and languages are required',
         }),
         {
           status: 400,
@@ -48,7 +47,7 @@ export async function POST(req) {
 
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:J',
+      range: 'Sheet1!A:I',
       valueInputOption: 'RAW',
       requestBody: {
         values: [
@@ -62,7 +61,6 @@ export async function POST(req) {
             experience,
             income,
             languages,
-            payment,
           ],
         ],
       },

@@ -10,7 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata = {
   title: "Duv-Duv Gap — O'zbekistondagi birinchi kreativlik maktabi",
-  description: "3 oyda kreativ kommunikatsiyalar sohasida professional bilim, real loyihalar va Agency 605 da ishlash imkoniyati.",
+  description: "2 oyda kreativ kommunikatsiyalar sohasida professional bilim, real loyihalar va Agency 605 da ishlash imkoniyati.",
 };
 
 export default function RootLayout({ children }) {

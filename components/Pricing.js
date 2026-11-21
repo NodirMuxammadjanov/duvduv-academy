@@ -1,16 +1,11 @@
 "use client";
 import styles from './Pricing.module.css';
-import {
-  COURSE_PRICE_AMOUNT,
-  COURSE_SPLIT_PRICE,
-  ONLINE_PRICE_AMOUNT,
-  ONLINE_SPLIT_PRICE,
-} from '@/lib/coursePricing';
+import { COURSE_PRICE_AMOUNT, COURSE_START, ONLINE_PRICE_AMOUNT } from '@/lib/coursePricing';
 
 export default function Pricing() {
   const offlineFeatures = [
-    '3 oy, haftada 2 marta darslar',
-    'Darslar yozib olinadi',
+    '2 oy, haftada 2 marta darslar',
+    '16 ta dars + 4 ta amaliyot',
     'Real mijoz bilan amaliyot',
     'Portfolio - real loyiha ishi',
     'Faqat oflayn - jonli ta\'lim',
@@ -31,8 +26,8 @@ export default function Pricing() {
   ];
 
   const plans = [
-    { type: 'Oflayn', amount: COURSE_PRICE_AMOUNT, split: COURSE_SPLIT_PRICE, features: offlineFeatures },
-    { type: 'Online', amount: ONLINE_PRICE_AMOUNT, split: ONLINE_SPLIT_PRICE, features: onlineFeatures },
+    { type: 'Oflayn', amount: COURSE_PRICE_AMOUNT, duration: '2 oylik to\'liq kurs', start: COURSE_START, features: offlineFeatures },
+    { type: 'Online', amount: ONLINE_PRICE_AMOUNT, duration: '3 oylik to\'liq kurs', features: onlineFeatures },
   ];
 
   return (
@@ -50,11 +45,13 @@ export default function Pricing() {
               <div className={styles.price}>
                 <span className={styles.currency}>so&apos;m</span>{plan.amount}
               </div>
-              <div className={styles.duration}>3 oylik to'liq kurs</div>
+              <div className={styles.duration}>{plan.duration}</div>
 
-              <div className={styles.split}>
-                Yoki <span>{`3 x ${plan.split}`}</span> bo'lib to'lash mumkin
-              </div>
+              {plan.start && (
+                <div className={styles.split}>
+                  <span>{plan.start}</span>
+                </div>
+              )}
 
               <div className={styles.grid}>
                 {plan.features.map((f, i) => (

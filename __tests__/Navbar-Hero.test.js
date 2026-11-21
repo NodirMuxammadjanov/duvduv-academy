@@ -60,9 +60,9 @@ describe('Hero', () => {
     expect(screen.getByText('12%')).toBeInTheDocument();
   });
 
-  test('shows duration stat: 3 OY', () => {
+  test('shows duration stat: 2 OY', () => {
     render(<Hero />);
-    expect(screen.getByText('3 OY')).toBeInTheDocument();
+    expect(screen.getByText('2 OY')).toBeInTheDocument();
   });
 
   test('hero image has proper alt text', () => {

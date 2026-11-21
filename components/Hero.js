@@ -17,7 +17,7 @@ export default function Hero() {
             O'zbekistondagi <em>birinchi</em> kreativ reklama maktabi
           </h1>
           <p className={styles.sub}>
-            3 oyda kreativ kommunikatsiyalar sohasida professional bilim, real loyihalar va Agency 605 da ishlash imkoniyati.
+            2 oyda kreativ kommunikatsiyalar sohasida professional bilim, real loyihalar va Agency 605 da ishlash imkoniyati.
           </p>
           <div className={styles.actions}>
             <a href="#contact" className={styles.primaryBtn}>KURSGA YOZILISH</a>
@@ -29,7 +29,7 @@ export default function Hero() {
               <span className={styles.metaLabel}>ARIZALAR</span>
             </div>
             <div className={styles.metaItem}>
-              <span className={styles.metaVal}>3 OY</span>
+              <span className={styles.metaVal}>2 OY</span>
               <span className={styles.metaLabel}>DAVOMIYLIGI</span>
             </div>
             <div className={styles.metaItem}>

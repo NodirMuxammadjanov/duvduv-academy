@@ -4,7 +4,6 @@ import { useId, useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from './ApplicationForm.module.css';
 import { formatPhoneNumber, isPhoneComplete } from '@/lib/phoneUtils';
-import { PAYMENT_OPTIONS, PAYMENT_QUESTION } from '@/lib/coursePricing';
 
 const MIN_LOADING_MS = 2500;
 
@@ -44,7 +43,7 @@ function validateStep2(formData) {
     return 'Iltimos, 2-bosqichdagi barcha maydonlarni to\'ldiring.';
   }
 
-  if (!formData.experience || !formData.income || !formData.languages.trim() || !formData.payment) {
+  if (!formData.experience || !formData.income || !formData.languages.trim()) {
     return 'Iltimos, 2-bosqichdagi barcha maydonlarni to\'ldiring.';
   }
 
@@ -109,7 +108,6 @@ export default function ApplicationForm() {
     experience: '',
     income: '',
     languages: '',
-    payment: '',
   });
 
   const handlePhoneChange = (e) => {
@@ -166,7 +164,6 @@ export default function ApplicationForm() {
         experience: formData.experience,
         income: formData.income,
         languages: formData.languages.trim(),
-        payment: formData.payment,
       };
 
       const resp = await fetch('/api/lead', {
@@ -333,19 +330,6 @@ export default function ApplicationForm() {
             required
             value={formData.languages}
             onChange={(e) => setFormData((current) => ({ ...current, languages: e.target.value }))}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>{PAYMENT_QUESTION} *</label>
-          <DropdownField
-            label={PAYMENT_QUESTION}
-            value={formData.payment}
-            placeholder="Tanlang"
-            options={PAYMENT_OPTIONS}
-            isOpen={openDropdown === 'payment'}
-            onToggle={() => toggleDropdown('payment')}
-            onChange={(payment) => setFormData((current) => ({ ...current, payment }))}
           />
         </div>
 
